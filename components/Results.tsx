@@ -34,7 +34,7 @@ const Results = ({ tag }: ResultsProps) => {
                 <div className="w-3/4 mx-auto my-20">
                     <div className="grid gap-4 grid-cols-custom auto-rows-custom grid-flow-dense">
                         {filteredImages.map((image, index) => (
-                            <Img url={image.url} stylize="cursor-pointer" />
+                            <Img key={index} url={image.url} stylize="cursor-pointer" />
                         ))}
                     </div>
                     <button onClick={handleBack} className="absolute bottom-4 right-4 hover:text-neutral-200">{`Go Back ->`}</button>
