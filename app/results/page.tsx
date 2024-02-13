@@ -1,4 +1,7 @@
+"use client";
+
 import Results from "@/components/Results";
+
 import { useUser } from "@/providers/ctx";
 
 const ResultsPage = () => {

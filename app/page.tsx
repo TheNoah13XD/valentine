@@ -1,6 +1,5 @@
 'use client';
 
-import Loader from "@/components/Loader";
 import { useUser } from "@/providers/ctx";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
