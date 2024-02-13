@@ -1,13 +1,12 @@
 import Results from "@/components/Results";
+import { useUser } from "@/providers/ctx";
 
-interface ResultsPageProps {
-    search: string;        
-}
+const ResultsPage = () => {
+    const { query } = useUser();
 
-const ResultsPage = ({ search }: ResultsPageProps) => {
     return (
         <>
-            <Results tag={search} />
+            <Results tag={query} />
         </>
     );
 }

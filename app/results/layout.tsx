@@ -9,7 +9,7 @@ import Loading from "./loading";
 
 const ResultsLayout = () => {
     const router = useRouter();
-    const { cracked, query } = useUser();
+    const { cracked } = useUser();
 
     useEffect(() => {
         if (cracked === false) {
@@ -21,7 +21,7 @@ const ResultsLayout = () => {
         return <Loading />;
     }
 
-    return <ResultsPage search={query} />;
+    return <ResultsPage />;
 }
  
 export default ResultsLayout;
