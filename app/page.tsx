@@ -1,5 +1,6 @@
 'use client';
 
+import Alert from "@/components/Alert";
 import { useUser } from "@/providers/ctx";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
@@ -8,15 +9,16 @@ export default function Home() {
     const [password, setPassword] = useState<string>("");
     const [tries, setTries] = useState<number>(0);
     const [body, setBody] = useState<string>("");
+    const [error, setError] = useState<string>("");
 
 	const router = useRouter();
 	const { cracked, setCracked } = useUser();
 
-	useEffect(() => {
-		if (cracked) {
-			router.push("/search");
-		}
-	}, [cracked]);
+    useEffect(() => {
+        if (cracked) {
+            router.push("/search");
+        }
+    }, [cracked]);
 
     const correctPassword = process.env.NEXT_PUBLIC_AUTH_PASS;
 
@@ -24,11 +26,22 @@ export default function Home() {
         event.preventDefault();
         if (password === correctPassword) {
             setTries(0);
-			setCracked(true);
+            setCracked(true);
         } else {
             setTries(tries + 1);
+            setError("wrong password");
         }
     }
+
+    useEffect(() => {
+        if (error) {
+            const timer = setTimeout(() => {
+                setError("");
+            }, 1000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [error]);
 
     useEffect(() => {
         if (tries === 3) {
@@ -44,6 +57,7 @@ export default function Home() {
 
     const forgotPass = async () => {
         try {
+            setError("sent an email to u");
             const response = await fetch('/api/mail', {
                 method: 'POST',
                 headers: {
@@ -82,9 +96,11 @@ export default function Home() {
 
 					{tries > 2 && (
 						<div className="flex justify-end w-full pt-4">
-							<button className="bg-purple-600 hover:bg-purple-800 active:scale-[0.99] p-2" onClick={forgotPass}>it went over my head!</button>
+							<button type="button" className="bg-purple-600 hover:bg-purple-800 active:scale-[0.99] p-2" onClick={forgotPass}>it went over my head!</button>
 						</div>
 					)}
+
+                    {error && <Alert message={error} view action={() => setError("")} />}
 				</form>
 			</div>
 		</>

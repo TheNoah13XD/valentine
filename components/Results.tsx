@@ -5,6 +5,8 @@ import { useUser } from "@/providers/ctx";
 
 import Img from "./Img";
 import images from '../app/data.json';
+import { useState } from "react";
+import Alert from "./Alert";
 
 interface ResultsProps {
     tag: string;
@@ -13,6 +15,7 @@ interface ResultsProps {
 const Results = ({ tag }: ResultsProps) => {
     const router = useRouter();
     const { setQuery } = useUser();
+    const [hoveredImageDate, setHoveredImageDate] = useState<string | null>(null);
 
     const filteredImages = images.filter((image) => {
         return image.tags.includes(tag);
@@ -34,10 +37,18 @@ const Results = ({ tag }: ResultsProps) => {
                 <div className="w-3/4 mx-auto my-20">
                     <div className="grid gap-4 grid-cols-custom auto-rows-custom grid-flow-dense">
                         {filteredImages.map((image, index) => (
-                            <Img key={index} url={image.url} stylize="cursor-pointer" />
+                            <Img 
+                                key={index} 
+                                url={image.url} 
+                                stylize="cursor-pointer" 
+                                onMouseEnter={() => setHoveredImageDate(image.date)}
+                                onMouseLeave={() => setHoveredImageDate(null)}
+                            />
                         ))}
                     </div>
                     <button onClick={handleBack} className="absolute bottom-4 right-4 hover:text-neutral-200">{`Go Back ->`}</button>
+
+                    {hoveredImageDate && <Alert message={hoveredImageDate} view/>}
                 </div>
             )}
         </>

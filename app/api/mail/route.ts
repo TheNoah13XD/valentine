@@ -14,7 +14,7 @@ export async function POST(req: Request) {
   
     const mailOptions = {
         from: process.env.NEXT_PUBLIC_MAILER_EMAIL,
-        to: 'broken.contact.1211@gmail.com',
+        to: 'nidhikulkarni4276@gmail.com',
         subject: 'your dumbass cant crack a password.',
         text: body
     };
