@@ -9,9 +9,30 @@ const ValentinePage = () => {
     const [weird, setWeird] = useState<boolean>(false);
     const { reward } = useReward('rewardId', 'confetti');
 
-    const handleValentine = () => {
+    const sendAnalytics = async (text: string) => {
+        try {
+            const response = await fetch('/api/mail', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ to: 'broken.personal.1211@gmail.com', text }),
+            });
+    
+            if (!response.ok) throw new Error('Failed to send email');
+            console.log('Email sent successfully');
+        } catch (error) {
+            console.error('Error sending email:', error);
+            throw error;
+        }
+    };
+
+    const handleValentine = async () => {
         setIsValentine(true);
         reward();
+        const device = navigator.userAgent;
+        const region = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        await sendAnalytics(`SHE SAID YES on ${new Date().toLocaleString()} from ${device} in ${region}`);
     }
 
     const handleNo = () => {

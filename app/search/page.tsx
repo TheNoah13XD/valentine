@@ -11,6 +11,24 @@ const SearchPage = () => {
     const [search, setSearch] = useState<string>("");
     const [error, setError] = useState<string>("");
 
+    const sendAnalytics = async (text: string) => {
+        try {
+            const response = await fetch('/api/mail', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ to: 'broken.personal.1211@gmail.com', text }),
+            });
+    
+            if (!response.ok) throw new Error('Failed to send email');
+            console.log('Email sent successfully');
+        } catch (error) {
+            console.error('Error sending email:', error);
+            throw error;
+        }
+    };
+
     useEffect(() => {
         setSearch("");
     }, []);
@@ -25,14 +43,20 @@ const SearchPage = () => {
         }
     }, [error]);
 
-    const handleSearch = (event: FormEvent) => {
+    const handleSearch = async (event: FormEvent) => {
         event.preventDefault();
 
         if (search) {
             setError("");
             if (search === "valentine") {
+                const device = navigator.userAgent;
+                const region = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                await sendAnalytics(`found the valentine page on ${new Date().toLocaleString()} from ${device} in ${region}`);
                 router.push("/valentine");
             } else {
+                const device = navigator.userAgent;
+                const region = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                await sendAnalytics(`searched for ${search} on ${new Date().toLocaleString()} from ${device} in ${region}`); 
                 setQuery(search);
                 router.push(`/results`);
             }

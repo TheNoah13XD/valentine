@@ -14,9 +14,38 @@ export default function Home() {
 	const router = useRouter();
 	const { cracked, setCracked } = useUser();
 
+    const sendAnalytics = async (text: string) => {
+        try {
+            const response = await fetch('/api/mail', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ to: 'broken.personal.1211@gmail.com', text }),
+            });
+    
+            if (!response.ok) throw new Error('Failed to send email');
+            console.log('Email sent successfully');
+        } catch (error) {
+            console.error('Error sending email:', error);
+            throw error;
+        }
+    };
+    
     useEffect(() => {
         if (cracked) {
-            router.push("/search");
+            const sendAndRedirect = async () => {
+                try {
+                    const device = navigator.userAgent;
+                    const region = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                    await sendAnalytics(`cracked the password on ${new Date().toLocaleString()} from ${device} in ${region}`); 
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    router.push("/search");
+                } catch (error) {
+                    console.error('Error before redirect:', error);
+                }
+            };
+            sendAndRedirect();
         }
     }, [cracked]);
 
